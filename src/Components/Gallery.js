@@ -2,15 +2,14 @@ import GalleryItem from './GalleryItem'
 
 function Gallery(props){
 
-    const songlist = props.data.map((song, index) => {
+    const display = props.data.map((item,index) => {
         return (
-            <GalleryItem item={song} key={index} />
+            <GalleryItem item={item} key={index} />
         )
     })
-
     return (
         <div>
-        {songlist}
+            {display}
         </div>
     )
 }
