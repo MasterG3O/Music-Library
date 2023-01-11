@@ -1,10 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Gallery from './Components/Gallery'
 import SearchBar from './Components/Searchbar'
 import AlbumView from './Components/AlbumView'
 import ArtistView from './Components/ArtistView'
 import { Fragment } from 'react/cjs/react.production.min'
+import { createResource as fetchData } from './helper'
+import Spinner from './Components/Spinner'
+
 
 function App() {
 	let [search, setSearch] = useState('')
@@ -14,7 +17,7 @@ function App() {
 	const API_URL = 'https://itunes.apple.com/search?term='
 
 	useEffect(() => {
-		if(search) {
+		if (search) {
 			const fetchData = async () => {
 				document.title = `${search} Music`
 				const response = await fetch(API_URL + search)
@@ -28,7 +31,7 @@ function App() {
 			fetchData()
 		}
 	}, [search])
-	
+
 	const handleSearch = (e, term) => {
 		e.preventDefault()
 		setSearch(term)
@@ -41,8 +44,10 @@ function App() {
 				<Routes>
 					<Route path="/" element={
 						<Fragment>
-							<SearchBar handleSearch = {handleSearch}/>
-							<Gallery data={data} />
+							<SearchBar handleSearch={handleSearch} />
+							<Suspense fallback={<Spinner/>}>
+								<Gallery data={data} />
+							</Suspense>
 						</Fragment>
 					} />
 					<Route path="/album/:id" element={<AlbumView />} />
@@ -50,7 +55,8 @@ function App() {
 				</Routes>
 			</Router>
 		</div>
-  	);
+	);
+
 }
 
 export default App;
